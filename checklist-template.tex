@@ -1,0 +1,170 @@
+
+\documentclass[12pt]{article}
+
+\usepackage{amsmath,amssymb}
+
+$if(linestretch)$
+\usepackage{setspace}
+$endif$
+\usepackage{iftex}
+
+
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[$for(microtypeoptions)$$microtypeoptions$$sep$,$endfor$]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+$if(indent)$
+$else$
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+$endif$
+$if(verbatim-in-note)$
+\usepackage{fancyvrb}
+$endif$
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{    
+$if(title-meta)$
+  pdftitle={$title-meta$},
+$endif$
+$if(author-meta)$
+  pdfauthor={$author-meta$},
+$endif$
+$if(lang)$
+  pdflang={$lang$},
+$endif$
+$if(subject)$
+  pdfsubject={$subject$},
+$endif$
+$if(keywords)$
+  pdfkeywords={$for(keywords)$$keywords$$sep$, $endfor$},
+$endif$
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+$if(verbatim-in-note)$
+\VerbatimFootnotes % allow verbatim text in footnotes
+$endif$
+
+
+
+
+\usepackage{geometry}
+\geometry{a4paper, margin=1cm, top=3cm, bottom=4cm, headheight=48pt}
+
+
+
+
+
+$-- My stuff $
+\usepackage{helvet}
+\usepackage[fontsize=16pt]{fontsize}
+
+\renewcommand{\familydefault}{\sfdefault}
+
+
+\usepackage{fontspec}
+
+\defaultfontfeatures[russoone]
+{
+    Path           = ./font/           ,
+    Extension      = .ttf              ,
+    UprightFont    = RussoOne-Regular  ,
+    }
+    \newfontfamily\russoone{russoone}
+    
+
+    % remove section numbers
+\setcounter{secnumdepth}{-\maxdimen}
+% enable lists
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+$if(numbersections)$
+\setcounter{secnumdepth}{$if(secnumdepth)$$secnumdepth$$else$5$endif$}
+$else$
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+$endif$
+
+
+\usepackage{qrcode}
+\usepackage{graphbox} %loads graphicx package
+\usepackage[export]{adjustbox}
+% \usepackage{showframe}
+\graphicspath{ {./graphics/} }
+
+\usepackage{titlesec}
+\titleformat{\section}
+  {\russoone\large}
+  {\thesection}{}{}
+
+% spacing before/after section title
+\titlespacing\section{0pt}{2pt plus 4pt minus 1pt}{0pt plus 2pt minus 2pt}
+
+\usepackage{datetime}
+% redefine \today to isoformat
+\yyyymmdddate
+\renewcommand{\dateseparator}{-}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+%no pagenumbering
+\pagenumbering{gobble}
+$-- line below header
+\renewcommand{\headrulewidth}{2pt}
+
+$-- Header 
+\lhead{ {\russoone \Large Checklist:
+$if(machine)$
+    $machine$
+$else$
+    Machine name is missing!
+$endif$
+}
+\\ \qquad { \today}
+}
+\rhead{\includegraphics[height=1.4cm, align=b]{logo}}
+
+$-- footer
+$if(wikipage)$
+\lfoot{$wikipage$}
+\rfoot{\raisebox{1.4cm}{\qrcode[height=3cm, nolink]{$wikipage$}}} 
+$endif$
+
+
+
+\begin{document}
+
+$-- Warning Symbols
+$for(signs)$
+    \includegraphics[height=1.5cm]{symbols/$signs$}
+$endfor$
+
+
+
+$if(has-frontmatter)$
+\mainmatter
+$endif$
+$body$
+
+
+$if(has-frontmatter)$
+\backmatter
+$endif$
+
+
+$for(include-after)$
+$include-after$
+
+$endfor$
+\end{document}
