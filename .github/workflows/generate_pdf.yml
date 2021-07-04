@@ -22,7 +22,7 @@ jobs:
         run: |
           ls checklists |\
           cut -d '.' -f1|\
-          xargs -n 1 -I % -P 2\
+          xargs -n 1 -I % -P 2 \
           pandoc --pdf-engine=xelatex --template checklist-template.tex -o output/%.pdf checklists/%.md
       - name: upload artifacts
         uses: actions/upload-artifact@master
