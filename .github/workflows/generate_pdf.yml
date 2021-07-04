@@ -1,0 +1,39 @@
+name: Generate PDFs
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  convert_via_pandoc:
+    runs-on: ubuntu-20.04
+    container:
+      image: docker://pandoc/ubuntu-latex:2.14
+      options: --entrypoint=sh
+    steps:
+      - uses: actions/checkout@v2
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d-%H:%M')"
+      - name: prepare output directories
+        run: |
+          mkdir output
+      - name: convert md to pdf
+        run: |
+          ls checklists |\
+          cut -d '.' -f1|\
+          xargs -n 1 -I % -P 2 \
+          pandoc --pdf-engine=xelatex --template checklist-template.tex -o output/%.pdf checklists/%.md
+      - name: upload artifacts
+        uses: actions/upload-artifact@master
+        with:
+          name: checklists.tar.gz
+          path: output/*
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: false
+          title: "Testing ${{ steps.date.outputs.date }}"
+          files: |
+            output/*.pdf
