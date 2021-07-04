@@ -33,12 +33,11 @@ After the metadata block there should be three sections with **short** notes on 
 # After
 * **should** clean up
 * if imperial units were used **must** wash hands
-
+```
 
 ### Final result:
 ![super-duper-saw_en.pdf](graphics/super-duper-saw_en.png)
 
-```
 
 Each time a PDF is build it is tagged with the current date (and version?) to be able to tell the most recent document.
 
