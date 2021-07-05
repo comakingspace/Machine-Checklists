@@ -7,6 +7,11 @@ $if(linestretch)$
 \usepackage{setspace}
 $endif$
 \usepackage{iftex}
+\ifPDFTeX
+  \usepackage[$if(fontenc)$$fontenc$$else$T1$endif$]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
 
 
 % Use upquote if available, for straight quotes in verbatim environments
@@ -68,10 +73,8 @@ $endif$
 
 $-- My stuff $
 \usepackage{helvet}
-% \usepackage[fontsize=16pt]{fontsize}
 
 \renewcommand{\familydefault}{\sfdefault}
-
 
 \usepackage{fontspec}
 
