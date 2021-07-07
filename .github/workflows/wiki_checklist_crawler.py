@@ -69,11 +69,12 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Pulling Semantic Media Wiki properties and writing them into a pandoc Markdown file')
     parser.add_argument('-u', '--url', dest='url', required=True,
                         help='Wiki page url to request')
-    parser.add_argument('-m', '--meta', dest='meta', action='extend', nargs='+',
-                        metavar='META-PROPERTY',
+    parser.add_argument('-m', '--meta', dest='meta', required=True,
+                        action='extend', nargs='+', metavar='META-PROPERTY',
                         help='Wiki properties to add to YAML header.\
                               If multiple entries are found, they\'ll be added as a list.')
-    parser.add_argument('-t', '--text', dest='text', action='append', nargs=2,
+    parser.add_argument('-t', '--text', dest='text', required=True,
+                        action='append', nargs=2,
                         metavar=('HEADING', 'TEXT-PROPERTY'),
                         help='Wiki properties to add as text section.\
                               Section name will be used as heading.\n \
@@ -92,12 +93,12 @@ if __name__ == '__main__':
 #     print([key for key in text_headings])
     
     query = createQueryString(args.meta + [key for key in text_headings])
-    print(query)
+    # print(query)
     
     response = askWikiAPI(args.url, query)
-    pprint.pprint(response)
+    # pprint.pprint(response)
     
     checklist_data = extractFullTextFromRequest(response)
-    pprint.pprint(checklist_data)
+    # pprint.pprint(checklist_data)
     
     writeMarkdownFiles(args.path, checklist_data, args.meta, text_headings)
