@@ -21,10 +21,14 @@ def askWikiAPI(url, query):
 def createQueryString(keys):
     return ' | '.join(['[[{key}::+]]|?{key}'.format(key=key) for key in keys]) + '|limit=3'
 
-def extractFullTextFromRequest(response):
+def extractTextFromRequest(response, add_source_link=False):
     outDict = {}
     for pagekey, page in response['query']['results'].items():
         pageDict = {}
+
+        if(add_source_link):
+            pageDict['source_link'] = page['fullurl']
+
         for propertykey, property in page['printouts'].items():
             # media wiki changes '_' and capitalization -.-*
             pageDict[propertykey.replace(' ', '_').lower()] = [entry['fulltext'] for entry in property]
@@ -32,10 +36,13 @@ def extractFullTextFromRequest(response):
         outDict[pagekey] = pageDict
     return outDict
         
-def writeMarkdownFiles(path, checklist_data, metadata, text):
+def writeMarkdownFiles(path, checklist_data, metadata, text, add_source_link=False):
     for pagename, page in checklist_data.items():
         with open(path / ''.join([makePOSIXfilename(pagename),'.md']), 'w') as f:
             f.write('---\n')
+
+            if(add_source_link):
+                f.write('source_link: {}\n'.format(page['source_link']))
             
             for propertyname, property in page.items():
                 if propertyname not in metadata:
@@ -69,11 +76,11 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Pulling Semantic Media Wiki properties and writing them into a pandoc Markdown file')
     parser.add_argument('-u', '--url', dest='url', required=True,
                         help='Wiki page url to request')
-    parser.add_argument('-m', '--meta', dest='meta', required=True,
+    parser.add_argument('-m', '--meta', dest='meta', 
                         action='extend', nargs='+', metavar='META-PROPERTY',
                         help='Wiki properties to add to YAML header.\
                               If multiple entries are found, they\'ll be added as a list.')
-    parser.add_argument('-t', '--text', dest='text', required=True,
+    parser.add_argument('-t', '--text', dest='text', 
                         action='append', nargs=2,
                         metavar=('HEADING', 'TEXT-PROPERTY'),
                         help='Wiki properties to add as text section.\
@@ -83,6 +90,8 @@ if __name__ == '__main__':
     parser.add_argument('-o', '--out', dest='path', type=pathlib.Path, default='./',
                         metavar='OUTPUTPATH',
                         help='Optional output path.')
+    parser.add_argument('--source_link', dest="source_link", action='store_true',
+                        help="Write the source link into the metadata header as 'source_link'")
     
     args = parser.parse_args()
     
@@ -98,7 +107,7 @@ if __name__ == '__main__':
     response = askWikiAPI(args.url, query)
     # pprint.pprint(response)
     
-    checklist_data = extractFullTextFromRequest(response)
+    checklist_data = extractTextFromRequest(response, args.source_link)
     # pprint.pprint(checklist_data)
     
-    writeMarkdownFiles(args.path, checklist_data, args.meta, text_headings)
+    writeMarkdownFiles(args.path, checklist_data, args.meta, text_headings, args.source_link)
