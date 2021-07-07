@@ -29,7 +29,7 @@ jobs:
               python3 $GITHUB_WORKSPACE/.github/workflows/wiki_checklist_crawler.py \
               --url https://wiki.comakingspace.de \
               --meta checklist_title checklist_symbols \
-	      --source_link \
+              --source_link \
               --text Before checklist_before \
               --text During checklist_during \
               --text After checklist_after \
