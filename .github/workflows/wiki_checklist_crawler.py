@@ -21,7 +21,19 @@ def askWikiAPI(url, query):
 def createQueryString(keys):
     return ' | '.join(['[[{key}::+]]|?{key}'.format(key=key) for key in keys]) + '|limit=3'
 
+# Media wiki changes property name strings for what ever reason.
+# This helper function emulates that behavior.
+def wikifyString(input):
+    return input.replace('_', ' ').capitalize()
+
+
 def extractTextFromRequest(response, add_source_link=False):
+
+    # "printrequests" contains datatype to determine result structure
+    # and 'label' (weird media wiki format) vs 'key' (as requested)
+    propertyInfo = {property['label']: property for property in response['query']['printrequests']}
+
+    # gather all returned properties into an organized dict
     outDict = {}
     for pagekey, page in response['query']['results'].items():
         pageDict = {}
@@ -29,10 +41,17 @@ def extractTextFromRequest(response, add_source_link=False):
         if(add_source_link):
             pageDict['source_link'] = page['fullurl']
 
-        for propertykey, property in page['printouts'].items():
-            # media wiki changes '_' and capitalization -.-*
-            pageDict[propertykey.replace(' ', '_').lower()] = [entry['fulltext'] for entry in property]
-            
+        for propertylabel, property in page['printouts'].items():
+
+            # handle data types
+            # default 'page' type has multiple objects
+            if(propertyInfo[propertylabel]['typeid'] == '_wpg'):
+                pageDict[propertyInfo[propertylabel]['label']] = [entry['fulltext'] for entry in property]
+            # rest can be handled as string
+            else:
+                pageDict[propertyInfo[propertylabel]['label']] = property
+
+
         outDict[pagekey] = pageDict
     return outDict
         
@@ -45,13 +64,20 @@ def writeMarkdownFiles(path, checklist_data, metadata, text, add_source_link=Fal
                 f.write('source_link: {}\n'.format(page['source_link']))
             
             for propertyname, property in page.items():
-                if propertyname not in metadata:
-#                     print("{} not found in {}".format(propertyname, metadata_keys))
+                if propertyname not in [wikifyString(i) for i in metadata]:
+                    print("{} not found in {}".format(propertyname, metadata))
                     continue
+                # if only one entry just print it
                 if len(property) == 1:
-                    f.write('{}: {}\n'.format(propertyname, property[0]))
+                    f.write('{}: {}\n'.format(metadata[0], property[0]))
                 else:
                     f.write('{}: \n'.format(propertyname))
+                    # find matching (ugly) media wiki and input key
+                    for metadata_propertyname in metadata:
+                        if wikifyString(metadata_propertyname) == propertyname:
+                            f.write('{}: \n'.format(metadata_propertyname))
+                            break
+
                     for line in property:
                         f.write('  - {}\n'.format(line))
             
@@ -59,10 +85,15 @@ def writeMarkdownFiles(path, checklist_data, metadata, text, add_source_link=Fal
             
             for propertyname, property in page.items():
 
-                if propertyname not in text:
-#                     print("{} not found in {}".format(propertyname, text_keys))
+                if propertyname not in [wikifyString(i) for i in text]:
+                    print("{} not found in {}".format(propertyname, text))
                     continue
-                f.write('# {}\n'.format(text[propertyname]))
+                # find matching (ugly) media wiki and input key
+                for text_propertyname in text:
+                    if wikifyString(text_propertyname) == propertyname:
+                        f.write('# {}\n'.format(text[text_propertyname]))
+                        break
+
                 for line in property:
                     f.write('* {}\n'.format(line))
                 f.write("\n")
