@@ -23,6 +23,10 @@ jobs:
           cut -d '.' -f1|\
           xargs -n 1 -I % -P 2 \
           pandoc --pdf-engine=xelatex --template checklist-template.tex -o pdf_files/%.pdf markdown_files/%.md
+          
+  add_commit_push:
+    runs-on: ubuntu-20.04
+    steps:
       - name: add, commit and push files to origin
         run: |
               git config --global user.name 'Wiki Checklist Crawler'
