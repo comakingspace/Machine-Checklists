@@ -33,5 +33,5 @@ jobs:
               --text During checklist_during \
               --text After checklist_after \
               --out output && \
-              ls -la output && cat output/*
+              ls -la markdown_files && cat markdown_files/*
               
