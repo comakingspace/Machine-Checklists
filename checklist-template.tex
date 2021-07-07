@@ -128,10 +128,10 @@ $-- line below header
 
 $-- Header 
 \lhead{ {\russoone \Large Checklist:
-$if(machine)$
-    $machine$
+$if(checklist_title)$
+    $checklist_title$
 $else$
-    Machine name is missing!
+    checklist_title is missing!
 $endif$
 }
 \\ \qquad { \today}
@@ -139,9 +139,9 @@ $endif$
 \rhead{\includegraphics[height=1.4cm, align=b]{logo}}
 
 $-- footer
-$if(wikipage)$
-\lfoot{$wikipage$}
-\rfoot{\raisebox{1.4cm}{\qrcode[height=3cm, nolink]{$wikipage$}}} 
+$if(checklist_link)$
+\lfoot{$checklist_link$}
+\rfoot{\raisebox{1.4cm}{\qrcode[height=3cm, nolink]{$checklist_link$}}} 
 $endif$
 
 
@@ -149,8 +149,8 @@ $endif$
 \begin{document}
 
 $-- Warning Symbols
-$for(signs)$
-    \includegraphics[height=1.5cm]{symbols/$signs$}
+$for($checklist_symbols$)$
+    \includegraphics[height=1.5cm]{symbols/$checklist_symbols$}
 $endfor$
 
 
