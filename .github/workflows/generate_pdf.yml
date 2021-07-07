@@ -27,6 +27,7 @@ jobs:
   add_commit_push:
     runs-on: ubuntu-20.04
     steps:
+      - uses: actions/checkout@v2
       - name: add, commit and push files to origin
         run: |
               git config --global user.name 'Wiki Checklist Crawler'
