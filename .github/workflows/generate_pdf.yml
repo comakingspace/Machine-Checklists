@@ -14,10 +14,13 @@ jobs:
     container:
       image: ghcr.io/pakue95/latex-pandoc:0.3
       options: --entrypoint=sh
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
     steps:
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/checkout@v2
       - name: convert md to pdf
         run: |
