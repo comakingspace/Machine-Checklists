@@ -25,6 +25,7 @@ jobs:
           pandoc --pdf-engine=xelatex --template checklist-template.tex -o pdf_files/%.pdf markdown_files/%.md
           
   add_commit_push:
+    needs: [convert_via_pandoc]
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
