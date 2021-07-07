@@ -14,6 +14,9 @@ jobs:
     container:
       image: ghcr.io/pakue95/latex-pandoc:0.3
       options: --entrypoint=sh
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v2
       - name: convert md to pdf
