@@ -1,11 +1,11 @@
 ---
+source_link: https://wiki.comakingspace.de/Table_Saw_Introduction
 checklist_title: Table Saw
 checklist_symbols: 
   - M003
   - M004
   - M002
   - M016
-checklist_link: Https://wiki.comakingspace.de/index.php?title=Table Saw Introduction
 ---
 
 # Before
