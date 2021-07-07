@@ -18,13 +18,13 @@ jobs:
       - uses: actions/checkout@v2
       - name: convert md to pdf
         run: |
-          cd /
+          cd /$GITHUB_WORKSPACE
           mkdir -p pdf_files
           ls markdown_files |\
           cut -d '.' -f1|\
           xargs -n 1 -I % -P 2 \
-          pandoc --pdf-engine=xelatex --template checklist-template.tex -o $GITHUB_WORKSPACE/pdf_files/%.pdf $GITHUB_WORKSPACE/markdown_files/%.md
-          ls $$GITHUB_WORKSPACE/pdf_files/*
+          pandoc --pdf-engine=xelatex --template checklist-template.tex -o pdf_files/%.pdf markdown_files/%.md
+          ls pdf_files/*
           
   add_commit_push:
     needs: [convert_via_pandoc]
