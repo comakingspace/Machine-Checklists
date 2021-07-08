@@ -10,7 +10,7 @@ Each checklist markdown has a YAML metadata block at the top that defines the va
 ```YAML
 ---
 checklist_title: "Super-duper saw" # name of the machine
-checklist_link:  "https://wiki.comakingspace.de/super-duper-saw" # link to the wikipage for further information
+source_link:     "https://wiki.comakingspace.de/super-duper-saw" # link to the wikipage for further information
 checklist_symbols:   # do/don't/warning symbols ISO7010
   - P010 # don't touch my saw
   - W003 # my saw may be radioactive
@@ -42,7 +42,35 @@ After the metadata block there should be three sections with **short** notes on 
 Each time a PDF is build it is tagged with the current date (and version?) to be able to tell the most recent document.
 
 ## Semantic wiki parsing
-**ToDo**
+The wiki parsing is done with a python script `wiki_checklist_crawler.py` that queries given properties and adds them as metadata or heading+paragraph/list in a markdown file for further parsing.
+
+### Usage
+
+```
+usage: wiki_checklist_crawler.py [-h] -u URL
+                                 [-m META-PROPERTY [META-PROPERTY ...]]
+                                 [-t HEADING TEXT-PROPERTY] [-o OUTPUTPATH]
+                                 [--source_link]
+
+Pulling Semantic Media Wiki properties and writing them into a pandoc Markdown
+file
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -u URL, --url URL     Wiki page url to request
+  -m META-PROPERTY [META-PROPERTY ...], --meta META-PROPERTY [META-PROPERTY ...]
+                        Wiki properties to add to YAML header. If multiple
+                        entries are found, they'll be added as a list.
+  -t HEADING TEXT-PROPERTY, --text HEADING TEXT-PROPERTY
+                        Wiki properties to add as text section. Section name
+                        will be used as heading. Can be called multiple times
+                        to add more text properties. If a property is found
+                        multiple times they are added as new lines.
+  -o OUTPUTPATH, --out OUTPUTPATH
+                        Optional output path.
+  --source_link         Write the source link into the metadata header as
+                        'source_link'
+```
 
 ## Autobuild with Github Actions
 
