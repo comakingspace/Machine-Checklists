@@ -23,4 +23,5 @@ checklist_symbols:
 
 # After
 * cleanup
+* testing
 
