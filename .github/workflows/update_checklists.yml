@@ -57,7 +57,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: markdown_files
-          path: /temp_md_files/
+          path: /tmp_md_files/
 
       - name: convert md to pdf
         run: |
