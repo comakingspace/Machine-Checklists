@@ -1,15 +1,10 @@
 name: Search Wiki and generate pdf files
 
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
-  # push:
-  #   branches: [ main ]
-
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 jobs:
-  # This workflow contains a single job called "build"
+
   pull_wiki:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -105,7 +100,14 @@ jobs:
           name: pdf_files
           path: tmp_pdf_files/
 
-      - name: Check contents
+      # only commit if there where changes in the md files
+      - name: Check contents and commit
         run: |
-          ls tmp_pdf_files
-          ls tmp_md_files
+          git config --global user.name 'Wiki Checklist Crawler'
+          git config --global user.email 'pakue95@users.noreply.github.com'
+          mv temp_md_files/* markdown_files/
+          mv temp_pdf_files/* pdf_files/
+          git add markdown_files/*.md
+          git add pdf_files/.pdf
+          git diff-index HEAD | grep markdown_files && git commit -am "GitHub Actions update pdf files" && git push
+
