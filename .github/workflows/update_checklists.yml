@@ -1,0 +1,103 @@
+name: Search Wiki and generate markdown files
+
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  # push:
+  #   branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  # This workflow contains a single job called "build"
+  pull_wiki:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # Runs a set of commands using the runners shell
+      - name: Get properties from wiki and generate markdown files
+        run: |
+              cd /$GITHUB_WORKSPACE
+              mkdir -p tmp_md_files
+              python3 .github/workflows/wiki_checklist_crawler.py \
+              --url https://wiki.comakingspace.de \
+              --meta checklist_title checklist_symbols \
+              --source_link \
+              --text Before checklist_before \
+              --text During checklist_during \
+              --text After checklist_after \
+              --out tmp_files 
+
+      - name: Save markdown files as artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: markdown_files
+          path: |
+            tmp_md_files
+          retention-days: 7
+              
+  generate_pdfs:
+    needs: pull_wiki
+    runs-on: ubuntu-20.04
+    container:
+      image: ghcr.io/pakue95/latex-pandoc:0.4
+      options: --entrypoint=sh
+    steps:
+      - name: Create tmp directories
+        run: |
+          cd /
+          mkdir -p tmp_md_files
+          mkdir -p tmp_pdf_files
+
+      - name: Download md files from previous job
+        uses: actions/download-artifact@v2
+        with:
+          name: markdown_files
+          path: /temp_md_files/
+
+      - name: convert md to pdf
+        run: |
+          ls tmp_md_files |\
+          cut -d '.' -f1|\
+          xargs -n 1 -I % -P 2 \
+          pandoc --pdf-engine=xelatex --template checklist-template.tex -o tmp_pdf_files/%.pdf tmp_md_files/%.md
+          ls tmp_pdf_files/*
+
+      - name: Save pdf files as artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: pdf_files
+          path: |
+            tmp_pdf_files
+          retention-days: 7
+
+  push_changes:
+    needs: generate_pdfs
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Create tmp directories
+        run: |
+          cd /
+          mkdir -p tmp_md_files
+          mkdir -p tmp_pdf_files
+
+      - name: Download md files from previous job
+        uses: actions/download-artifact@v2
+        with:
+          name: markdown_files
+          path: /tmp_md_files/
+
+      - name: Download md files from previous job
+        uses: actions/download-artifact@v2
+        with:
+          name: pdf_files
+          path: /tmp_pdf_files/
+
+      - name: Check contents
+        run: |
+          ls tmp_pdf_files
+          ls tmp_md_files
