@@ -109,5 +109,9 @@ jobs:
           mv tmp_pdf_files/* pdf_files/
           git add markdown_files/*.md
           git add pdf_files/*.pdf
-          git diff-index HEAD | grep markdown_files && git commit -am "GitHub Actions update pdf files" && git push
+          if git diff-index HEAD | grep markdown_files; then \
+          git commit -am "GitHub Actions update pdf files" && git push; \
+          else \
+          echo "nothing to commit"
+          fi
 
