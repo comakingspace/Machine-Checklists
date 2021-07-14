@@ -1,4 +1,4 @@
-name: Search Wiki and generate markdown files
+name: Search Wiki and generate pdf files
 
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
@@ -30,7 +30,7 @@ jobs:
               --text Before checklist_before \
               --text During checklist_during \
               --text After checklist_after \
-              --out tmp_files 
+              --out tmp_md_files 
 
       - name: Save markdown files as artifacts
         uses: actions/upload-artifact@v2
