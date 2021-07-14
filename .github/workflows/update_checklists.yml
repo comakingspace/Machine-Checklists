@@ -49,7 +49,7 @@ jobs:
     steps:
       - name: Create tmp directories
         run: |
-          cd /
+          cd /$GITHUB_WORKSPACE
           mkdir -p tmp_md_files
           mkdir -p tmp_pdf_files
 
@@ -60,17 +60,15 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: markdown_files
-          path: /tmp_md_files/
+          path: tmp_md_files/
 
       - name: convert md to pdf
         run: |
-          cd /
-          ls $GITHUB_WORKSPACE
-          echo 
+          cd $GITHUB_WORKSPACE
           ls tmp_md_files |\
           cut -d '.' -f1|\
           xargs -n 1 -I % -P 2 \
-          pandoc --pdf-engine=xelatex --template /$GITHUB_WORKSPACE/checklist-template.tex -o tmp_pdf_files/%.pdf tmp_md_files/%.md
+          pandoc --pdf-engine=xelatex --template checklist-template.tex -o tmp_pdf_files/%.pdf tmp_md_files/%.md
           ls tmp_pdf_files/*
 
       - name: Save pdf files as artifacts
