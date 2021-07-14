@@ -47,14 +47,14 @@ jobs:
       image: ghcr.io/pakue95/latex-pandoc:0.4
       options: --entrypoint=sh
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
       - name: Create tmp directories
         run: |
           cd /$GITHUB_WORKSPACE
           mkdir -p tmp_md_files
           mkdir -p tmp_pdf_files
-
-      - name: Checkout repository
-        uses: actions/checkout@v2
 
       - name: Download md files from previous job
         uses: actions/download-artifact@v2
