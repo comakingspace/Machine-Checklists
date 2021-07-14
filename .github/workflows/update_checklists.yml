@@ -84,9 +84,12 @@ jobs:
     needs: generate_pdfs
     runs-on: ubuntu-20.04
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
       - name: Create tmp directories
         run: |
-          cd /
+          cd /$GITHUB_WORKSPACE
           mkdir -p tmp_md_files
           mkdir -p tmp_pdf_files
 
@@ -94,13 +97,13 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: markdown_files
-          path: /tmp_md_files/
+          path: tmp_md_files/
 
       - name: Download md files from previous job
         uses: actions/download-artifact@v2
         with:
           name: pdf_files
-          path: /tmp_pdf_files/
+          path: tmp_pdf_files/
 
       - name: Check contents
         run: |
