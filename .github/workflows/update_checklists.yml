@@ -105,8 +105,8 @@ jobs:
         run: |
           git config --global user.name 'Wiki Checklist Crawler'
           git config --global user.email 'pakue95@users.noreply.github.com'
-          mv temp_md_files/* markdown_files/
-          mv temp_pdf_files/* pdf_files/
+          mv tmp_md_files/* markdown_files/
+          mv tmp_pdf_files/* pdf_files/
           git add markdown_files/*.md
           git add pdf_files/.pdf
           git diff-index HEAD | grep markdown_files && git commit -am "GitHub Actions update pdf files" && git push
