@@ -65,7 +65,8 @@ jobs:
       - name: convert md to pdf
         run: |
           cd /
-          ls
+          ls $GITHUB_WORKSPACE
+          echo 
           ls tmp_md_files |\
           cut -d '.' -f1|\
           xargs -n 1 -I % -P 2 \
