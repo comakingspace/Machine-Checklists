@@ -69,7 +69,7 @@ jobs:
           ls tmp_md_files |\
           cut -d '.' -f1|\
           xargs -n 1 -I % -P 2 \
-          pandoc --pdf-engine=xelatex --template checklist-template.tex -o tmp_pdf_files/%.pdf tmp_md_files/%.md
+          pandoc --pdf-engine=xelatex --template /$GITHUB_WORKSPACE/checklist-template.tex -o tmp_pdf_files/%.pdf tmp_md_files/%.md
           ls tmp_pdf_files/*
 
       - name: Save pdf files as artifacts
