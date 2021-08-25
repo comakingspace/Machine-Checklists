@@ -16,7 +16,7 @@ checklist_symbols:
 * **Must** check that someone can help in case of an accident
 * **Should** check dust extraction
 * Push-stick needed?
-* User only **one** fence at the same time
+* Use only **one** fence at the same time
 
 # During
 * **Must not** cut multiple pieces at once

@@ -12,11 +12,11 @@ checklist_symbols:
 * **Should** clean bed (e.g. with isopropanol)
 
 # During
-* **Must** observe 1st layer
 * **Must not** leave the workshop during the print; check regularly
+* **Must** observe 1st layer
 
 # After
-* **Must** remove filament from extruder (may break off if left)
 * **Must** let nozzle cool down before turning off printer
+* **Must** remove filament from extruder (may break off if left)
 * **Should** turn off slicer PC if not needed
 

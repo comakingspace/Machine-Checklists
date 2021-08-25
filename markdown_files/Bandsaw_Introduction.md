@@ -10,9 +10,9 @@ checklist_symbols:
 
 # Before
 * **Must not** use sanding disk on Metabo BS 1638 W
+* **Must** adjust blade guides for workpiece
 * **Must** adjust tension of the blade
 * **Must** check blade tracking on the wheels
-* **Must** adjust blade guides for workpiece
 
 # During
 * **Must** secure round workpieces with a jig or similar
