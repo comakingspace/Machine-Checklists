@@ -18,7 +18,7 @@ jobs:
         run: |
               cd /$GITHUB_WORKSPACE
               mkdir -p tmp_md_files
-              python3 .github/workflows/wiki_checklist_crawler.py \
+              python3 src/wiki_checklist_crawler.py \
               --url https://wiki.comakingspace.de \
               --meta checklist_title checklist_symbols \
               --source_link \

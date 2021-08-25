@@ -19,7 +19,7 @@ def askWikiAPI(url, query):
         return json.load(response)
 
 def createQueryString(keys):
-    return ' | '.join(['[[{key}::+]]|?{key}'.format(key=key) for key in keys]) + '|limit=3'
+    return ' | '.join(['[[{key}::+]]|?{key}'.format(key=key) for key in keys])
 
 # Media wiki changes property name strings for what ever reason.
 # This helper function emulates that behavior.
@@ -57,6 +57,7 @@ def extractTextFromRequest(response, add_source_link=False):
         
 def writeMarkdownFiles(path, checklist_data, metadata, text, add_source_link=False):
     for pagename, page in checklist_data.items():
+        print("Writing file {}".format(pagename))
         with open(path / ''.join([makePOSIXfilename(pagename),'.md']), 'w') as f:
             f.write('---\n')
 
