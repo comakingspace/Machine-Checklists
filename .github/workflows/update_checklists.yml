@@ -2,6 +2,11 @@ name: Search Wiki and generate pdf files
 
 on:
   workflow_dispatch:
+    input:
+      SKIP_UNCHANGED:
+        description: "If true; don't commit if md files didn't change"
+        required: true
+        default: 'true'
 
 jobs:
 
@@ -109,7 +114,7 @@ jobs:
           mv tmp_pdf_files/* pdf_files/
           git add markdown_files/*.md
           git add pdf_files/*.pdf
-          if git diff-index HEAD | grep markdown_files; then \
+          if [ ${{ github.event.input.SKIP_UNCHANGED }} != 'true' ] || [ git diff-index HEAD | grep markdown_files ]; then \
           git commit -am "GitHub Actions update pdf files" && git push; \
           else \
           echo "nothing to commit"
